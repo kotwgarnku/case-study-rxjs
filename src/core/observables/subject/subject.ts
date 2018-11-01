@@ -5,7 +5,7 @@ import { SafeObserver } from "core/safe-observer";
 import { Observable } from "../observable/observable";
 
 export class Subject<T> extends Observable<T> implements Subscribable<T> {
-  private observers: SafeObserver<T>[];
+  protected observers: SafeObserver<T>[];
 
   constructor() {
     super();
@@ -14,7 +14,8 @@ export class Subject<T> extends Observable<T> implements Subscribable<T> {
 
   subscribe(observer?: Observer<T>): Subscription {
     if (observer) {
-      this.observers = [...this.observers, new SafeObserver(observer)];
+      const safeObserver = new SafeObserver(observer);
+      this.observers = [...this.observers, safeObserver];
 
       return new Subscription(() => {
         this.observers = this.observers.filter(obs => obs !== observer);

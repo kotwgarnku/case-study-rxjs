@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "target": "es5",
     "alwaysStrict": true,
-    "strict": true
+    "strict": true,
+    "lib": ["es2015", "es2016", "es2017"]
   }
 }
