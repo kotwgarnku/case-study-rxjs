@@ -1,9 +1,9 @@
 import { Observable } from "core/observables";
 import { SafeObserver } from "core/safe-observer";
 import { isFunction } from "utils";
+import { createFakeObserver } from "utils/testing/fake-observer";
 
 import { map } from "./map";
-import { createFakeObserver } from "utils/testing/fake-observer";
 
 describe("Operator: map", function() {
   const baseObservable = new Observable(dataSource);
@@ -26,12 +26,10 @@ describe("Operator: map", function() {
   });
 
   it("should return new Observable", function() {
-    const mappedObservable = baseObservable.pipe(map(x => 2 * x));
     expect(mappedObservable).not.toBe(baseObservable);
   });
 
   it("should use given function", function() {
-    const mappedObservable = baseObservable.pipe(map(x => 2 * x));
     mappedObservable.subscribe(fakeObserver);
     expect(fakeObserver.next).toHaveBeenCalledWith(2);
   });

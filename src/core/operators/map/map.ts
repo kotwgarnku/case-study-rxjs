@@ -19,7 +19,8 @@ export function map<T, R>(
           safeObserver.complete();
         }
       });
-      observable.dataSource(mappedSafeObserver);
+      const subscription = observable.subscribe(mappedSafeObserver);
+      return () => subscription.unsubscribe();
     });
   };
 }

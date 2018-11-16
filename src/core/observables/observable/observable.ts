@@ -10,7 +10,9 @@ import { noop } from "utils";
 
 export class Observable<T> implements Subscribable<T> {
   constructor(
-    readonly dataSource: (observer: SafeObserver<T>) => TearDownLogic = noop
+    private readonly dataSource: (
+      observer: SafeObserver<T>
+    ) => TearDownLogic = noop
   ) {}
 
   subscribe(observer?: Observer<T>): Subscription {
@@ -33,13 +35,9 @@ export class Observable<T> implements Subscribable<T> {
     op3: OperatorFunction<B, C>
   ): Observable<C>;
   pipe(...operators: OperatorFunction<any, any>[]): Observable<any> {
-    if (operators.length === 0) {
-      return this as Observable<any>;
-    } else {
-      return operators.reduce(
-        (observable, operator) => operator(observable),
-        this as Observable<any>
-      );
-    }
+    return operators.reduce(
+      (observable, operator) => operator(observable),
+      this as Observable<any>
+    );
   }
 }
