@@ -1,11 +1,12 @@
 import { Observable } from "../observable/observable";
 import { combineLatest } from "./combine-latest";
 
+// TODO: make real tests
 describe("combineLatest", function() {
   it("should work", function(done) {
     const A = new Observable(observer => {
-      let nA = 1;
-      const interval = setInterval(() => observer.next((nA += 1)), 10);
+      let aValue = 1;
+      const interval = setInterval(() => observer.next((aValue += 1)), 10);
 
       return () => {
         clearInterval(interval);
@@ -13,8 +14,8 @@ describe("combineLatest", function() {
     });
 
     const B = new Observable(observer => {
-      let nA = 1;
-      const interval = setInterval(() => observer.next((nA += 10)), 20);
+      let bValue = 1;
+      const interval = setInterval(() => observer.next((bValue += 10)), 20);
 
       return () => {
         clearInterval(interval);
@@ -22,8 +23,8 @@ describe("combineLatest", function() {
     });
 
     const C = new Observable(observer => {
-      let nA = 1;
-      const interval = setInterval(() => observer.next((nA += 100)), 50);
+      let cValue = 1;
+      const interval = setInterval(() => observer.next((cValue += 100)), 50);
 
       return () => {
         clearInterval(interval);
@@ -39,9 +40,9 @@ describe("combineLatest", function() {
     }).subscribe({
       next() {
         times += 1;
-        if (times >= 10) {
+        if (times >= 3) {
           subscription.unsubscribe();
-          expect(times).toBe(10);
+          expect(times).toBe(3);
           done();
         }
       }
