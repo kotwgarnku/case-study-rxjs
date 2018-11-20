@@ -1,6 +1,6 @@
-import { OperatorFunction, Predicate } from 'core/interfaces'
-import { Observable } from 'core/observables'
-import { SafeObserver } from 'core/safe-observer/safe-observer'
+import { OperatorFunction, Predicate } from 'core/interfaces';
+import { Observable } from 'core/observables';
+import { SafeObserver } from 'core/safe-observer/safe-observer';
 
 export function first<T>(
   predicate: Predicate<T> = () => true
@@ -10,19 +10,19 @@ export function first<T>(
       const firstObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
           if (predicate(value)) {
-            observer.next(value)
-            observer.complete()
+            observer.next(value);
+            observer.complete();
           }
         },
         error(err: Error) {
-          observer.error(err)
+          observer.error(err);
         },
         complete() {
-          observer.complete()
+          observer.complete();
         },
-      })
-      const subscription = observable.subscribe(firstObserver)
-      return () => subscription.unsubscribe()
-    })
-  }
+      });
+      const subscription = observable.subscribe(firstObserver);
+      return () => subscription.unsubscribe();
+    });
+  };
 }

@@ -1,6 +1,6 @@
-import { OperatorFunction, UnaryFunction } from 'core/interfaces'
-import { Observable } from 'core/observables'
-import { SafeObserver } from 'core/safe-observer/safe-observer'
+import { OperatorFunction, UnaryFunction } from 'core/interfaces';
+import { Observable } from 'core/observables';
+import { SafeObserver } from 'core/safe-observer/safe-observer';
 
 export function map<T, R>(
   mapping: UnaryFunction<T, R>
@@ -9,17 +9,17 @@ export function map<T, R>(
     return new Observable<R>((observer) => {
       const mappedObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
-          observer.next(mapping(value))
+          observer.next(mapping(value));
         },
         error(err: Error) {
-          observer.error(err)
+          observer.error(err);
         },
         complete() {
-          observer.complete()
+          observer.complete();
         },
-      })
-      const subscription = observable.subscribe(mappedObserver)
-      return () => subscription.unsubscribe()
-    })
-  }
+      });
+      const subscription = observable.subscribe(mappedObserver);
+      return () => subscription.unsubscribe();
+    });
+  };
 }

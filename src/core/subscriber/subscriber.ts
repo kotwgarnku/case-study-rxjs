@@ -1,35 +1,35 @@
-import { PartialObserver } from '../interfaces'
-import { SafeObserver } from '../safe-observer/safe-observer'
+import { PartialObserver } from '../interfaces';
+import { SafeObserver } from '../safe-observer/safe-observer';
 
 export class Subscriber<T> extends SafeObserver<T> {
-  private isStopped: boolean
+  private isStopped: boolean;
 
   constructor(observer: PartialObserver<T>) {
-    super(observer)
-    this.isStopped = false
+    super(observer);
+    this.isStopped = false;
   }
 
   next(value: T) {
     if (!this.isStopped) {
-      super.next(value)
+      super.next(value);
     }
   }
 
   error(err: Error) {
     if (!this.isStopped) {
-      super.error(err)
-      this.stop()
+      super.error(err);
+      this.stop();
     }
   }
 
   complete() {
     if (!this.isStopped) {
-      super.complete()
-      this.stop()
+      super.complete();
+      this.stop();
     }
   }
 
   stop() {
-    this.isStopped = true
+    this.isStopped = true;
   }
 }

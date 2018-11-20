@@ -1,1 +1,1 @@
-export type TearDownLogic = void | (() => void)
+export type TearDownLogic = void | (() => void);
