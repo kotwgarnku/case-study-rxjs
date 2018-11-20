@@ -16,19 +16,10 @@ export class ReplaySubject<T> extends Subject<T> {
   subscribe(observer?: PartialObserver<T>): Subscription {
     if (observer) {
       const subscriber = new Subscriber(observer)
-      this.subscribers = [...this.subscribers, subscriber]
-
       this.buffer.content().forEach((value) => subscriber.next(value))
-
-      return new Subscription(() => {
-        subscriber.stop()
-        this.subscribers = this.subscribers.filter(
-          (subs) => subs !== subscriber
-        )
-      })
-    } else {
-      return Subscription.empty()
     }
+
+    return super.subscribe(observer)
   }
 
   next(value: T) {
