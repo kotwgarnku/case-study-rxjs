@@ -1,10 +1,9 @@
-import { createFakeObserver } from 'utils/testing';
+import { createFakeObserver, FakeObserver } from 'utils/testing';
 
-import { Observer } from '../interfaces';
 import { Subscriber } from './subscriber';
 
 describe('Subscriber', function() {
-  let observer: Observer<number>;
+  let observer: FakeObserver<number>;
 
   beforeEach(function() {
     observer = createFakeObserver();
@@ -29,6 +28,16 @@ describe('Subscriber', function() {
         expect(observer.error).not.toHaveBeenCalled();
         expect(observer.complete).not.toHaveBeenCalled();
       });
+
+      it('should not call next() when stopped', function() {
+        const expectedValue = 5;
+        safeObserver.next(expectedValue);
+        expect(observer.next).toHaveBeenCalledWith(expectedValue);
+        observer.next.calls.reset();
+        safeObserver.stop();
+        safeObserver.next(expectedValue);
+        expect(observer.next).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -51,6 +60,25 @@ describe('Subscriber', function() {
         expect(observer.next).not.toHaveBeenCalled();
         expect(observer.complete).not.toHaveBeenCalled();
       });
+
+      it('should stop subscriber after error()', function() {
+        const expectedError = new Error('Observer error.');
+        safeObserver.error(expectedError);
+        expect(observer.error).toHaveBeenCalled();
+        observer.error.calls.reset();
+        safeObserver.error(expectedError);
+        expect(observer.error).not.toHaveBeenCalled();
+      });
+
+      it('should not call error() when stopped', function() {
+        const expectedError = new Error('Observer error.');
+        safeObserver.error(expectedError);
+        expect(observer.error).toHaveBeenCalledWith(expectedError);
+        observer.error.calls.reset();
+        safeObserver.stop();
+        safeObserver.error(expectedError);
+        expect(observer.error).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -67,10 +95,18 @@ describe('Subscriber', function() {
         expect(observer.complete).toHaveBeenCalled();
       });
 
-      it('should not call next or error', function() {
+      it('should stop subscriber after complete()', function() {
         safeObserver.complete();
-        expect(observer.next).not.toHaveBeenCalled();
-        expect(observer.error).not.toHaveBeenCalled();
+        expect(observer.complete).toHaveBeenCalled();
+        observer.complete.calls.reset();
+        safeObserver.complete();
+        expect(observer.complete).not.toHaveBeenCalled();
+      });
+
+      it('should not call complete() when stopped', function() {
+        safeObserver.stop();
+        safeObserver.complete();
+        expect(observer.complete).not.toHaveBeenCalled();
       });
     });
   });
