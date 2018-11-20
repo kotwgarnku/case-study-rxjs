@@ -1,5 +1,5 @@
-import { AtLeastOneOf } from "types";
+import { AtLeastOneOf } from 'types'
 
-import { Observer } from "./observer";
+import { Observer } from './observer'
 
-export type PartialObserver<T> = AtLeastOneOf<Observer<T>>;
+export type PartialObserver<T> = AtLeastOneOf<Observer<T>>

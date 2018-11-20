@@ -1,1 +1,1 @@
-export type Predicate<T> = (arg: T) => boolean;
+export type Predicate<T> = (arg: T) => boolean

@@ -1,1 +1,1 @@
-export * from "./fake-observer";
+export * from './fake-observer'

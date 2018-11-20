@@ -1,137 +1,135 @@
-import { Observable } from "./observable";
+import { Observable } from './observable'
 
-describe("subscribe", () => {
-  it("should be synchronous", () => {
-    let subscribed = false;
-    let nexted: string;
-    let completed: boolean;
-    const source = new Observable<string>(observer => {
-      subscribed = true;
-      observer.next("wee");
-      expect(nexted).toEqual("wee");
-      observer.complete();
-      expect(completed).toBe(true);
-    });
+describe('subscribe', () => {
+  it('should be synchronous', () => {
+    let subscribed = false
+    let nexted: string
+    let completed: boolean
+    const source = new Observable<string>((observer) => {
+      subscribed = true
+      observer.next('wee')
+      expect(nexted).toEqual('wee')
+      observer.complete()
+      expect(completed).toBe(true)
+    })
 
-    expect(subscribed).toBe(false);
+    expect(subscribed).toBe(false)
 
-    let mutatedByNext = false;
-    let mutatedByComplete = false;
+    let mutatedByNext = false
+    let mutatedByComplete = false
 
     source.subscribe({
       next: (x: string) => {
-        nexted = x;
-        mutatedByNext = true;
+        nexted = x
+        mutatedByNext = true
       },
       complete: () => {
-        completed = true;
-        mutatedByComplete = true;
-      }
-    });
+        completed = true
+        mutatedByComplete = true
+      },
+    })
 
-    expect(mutatedByNext).toBe(true);
-    expect(mutatedByComplete).toBe(true);
-  });
+    expect(mutatedByNext).toBe(true)
+    expect(mutatedByComplete).toBe(true)
+  })
 
-  it("should work when subscribe is called with no arguments", () => {
-    const source = new Observable<string>(subscriber => {
-      subscriber.next("foo");
-      subscriber.complete();
-    });
+  it('should work when subscribe is called with no arguments', () => {
+    const source = new Observable<string>((subscriber) => {
+      subscriber.next('foo')
+      subscriber.complete()
+    })
 
-    source.subscribe();
-  });
+    source.subscribe()
+  })
 
-  it("should ignore next messages after unsubscription", done => {
-    let times = 0;
+  it('should ignore next messages after unsubscription', (done) => {
+    let times = 0
 
-    const subscription = new Observable<number>(observer => {
-      let i = 0;
+    const subscription = new Observable<number>((observer) => {
+      let i = 0
       const id = setInterval(() => {
-        observer.next(i++);
-      }, 0);
+        observer.next(i++)
+      }, 0)
 
       return () => {
-        clearInterval(id);
-        expect(times).toEqual(2);
-        done();
-      };
+        clearInterval(id)
+        expect(times).toEqual(2)
+        done()
+      }
     }).subscribe({
       next() {
-        times += 1;
+        times += 1
         if (times === 2) {
-          subscription.unsubscribe();
+          subscription.unsubscribe()
         }
+      },
+    })
+  })
+
+  it('should ignore error messages after unsubscription', (done) => {
+    let times = 0
+    let errorCalled = false
+
+    const subscription = new Observable<number>((observer) => {
+      let i = 0
+      const id = setInterval(() => {
+        observer.next(i++)
+        if (i === 3) {
+          observer.error(new Error())
+        }
+      }, 0)
+
+      return () => {
+        clearInterval(id)
+        expect(times).toEqual(2)
+        expect(errorCalled).toBe(false)
+        done()
       }
-    });
-  });
-
-  it("should ignore error messages after unsubscription", done => {
-    let times = 0;
-    let errorCalled = false;
-
-    const subscription = new Observable<number>(observer => {
-      let i = 0;
-      const id = setInterval(() => {
-        observer.next(i++);
-        if (i === 3) {
-          observer.error(new Error());
+    }).subscribe({
+      next() {
+        times += 1
+        if (times === 2) {
+          subscription.unsubscribe()
         }
-      }, 0);
+      },
+      error() {
+        errorCalled = true
+      },
+    })
+  })
+
+  it('should ignore complete messages after unsubscription', (done) => {
+    let times = 0
+    let completeCalled = false
+
+    const subscription = new Observable<number>((observer) => {
+      let i = 0
+      const id = setInterval(() => {
+        observer.next(i++)
+        if (i === 3) {
+          observer.complete()
+        }
+      }, 0)
 
       return () => {
-        clearInterval(id);
-        expect(times).toEqual(2);
-        expect(errorCalled).toBe(false);
-        done();
-      };
+        clearInterval(id)
+        expect(times).toEqual(2)
+        expect(completeCalled).toBe(false)
+        done()
+      }
+    }).subscribe({
+      next() {
+        times += 1
+        if (times === 2) {
+          subscription.unsubscribe()
+        }
+      },
+      error: null,
+      complete() {
+        completeCalled = true
+      },
     })
-      .subscribe({
-        next() {
-          times += 1;
-          if (times === 2) {
-            subscription.unsubscribe();
-          }
-        },
-        error() {
-          errorCalled = true;
-        }
-      });
-  });
-
-  it("should ignore complete messages after unsubscription", done => {
-    let times = 0;
-    let completeCalled = false;
-
-    const subscription = new Observable<number>(observer => {
-      let i = 0;
-      const id = setInterval(() => {
-        observer.next(i++);
-        if (i === 3) {
-          observer.complete();
-        }
-      }, 0);
-
-      return () => {
-        clearInterval(id);
-        expect(times).toEqual(2);
-        expect(completeCalled).toBe(false);
-        done();
-      };
-    })
-      .subscribe({
-        next() {
-          times += 1
-          if (times === 2) {
-            subscription.unsubscribe();
-          }
-        },
-        error: null,
-        complete() {
-          completeCalled = true;
-        }
-      });
-  });
+  })
 
   // describe("when called with an anonymous observer", () => {
   //   it(
@@ -342,4 +340,4 @@ describe("subscribe", () => {
   //     console.log = _log;
   //   });
   // });
-});
+})
