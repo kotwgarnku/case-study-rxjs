@@ -1,7 +1,5 @@
-import { AtLeastOneOf } from "types";
-
-export type Observer<T = any> = AtLeastOneOf<{
+export interface Observer<T> {
   next: (value: T) => void;
-  error: (error: Error) => void;
+  error: (error: any) => void;
   complete: () => void;
-}>;
+}

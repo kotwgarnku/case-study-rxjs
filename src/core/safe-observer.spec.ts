@@ -1,8 +1,10 @@
+import { createFakeObserver } from "utils/testing";
+
 import { SafeObserver } from "./safe-observer";
-import { createFakeObserver } from "utils/testing/fake-observer";
+import { Observer } from "./interfaces";
 
 describe("SafeObserver", function() {
-  let observer: SafeObserver<number>;
+  let observer: Observer<number>;
 
   beforeEach(function() {
     observer = createFakeObserver();

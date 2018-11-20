@@ -1,5 +1,4 @@
-import { Subscribable, Observer } from "core/interfaces";
-import { SafeObserver } from "core/safe-observer";
+import { Subscribable, PartialObserver } from "core/interfaces";
 import { Subscription } from "core/subscription";
 import { Subscriber } from "core/subscriber";
 
@@ -13,7 +12,7 @@ export class Subject<T> extends Observable<T> implements Subscribable<T> {
     this.subscribers = [];
   }
 
-  subscribe(observer?: Observer<T>): Subscription {
+  subscribe(observer?: PartialObserver<T>): Subscription {
     if (observer) {
       const subscriber = new Subscriber(observer);
       this.subscribers = [...this.subscribers, subscriber];

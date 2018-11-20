@@ -1,10 +1,10 @@
-import { Observer } from "./interfaces";
+import { PartialObserver } from "./interfaces";
 import { SafeObserver } from "./safe-observer";
 
 export class Subscriber<T> extends SafeObserver<T> {
   private isStopped: boolean;
 
-  constructor(observer: Observer<T>) {
+  constructor(observer: PartialObserver<T>) {
     super(observer);
     this.isStopped = false;
   }

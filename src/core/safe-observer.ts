@@ -1,9 +1,9 @@
 import { isFunction } from "utils";
 
-import { Observer } from "./interfaces";
+import { Observer, PartialObserver } from "./interfaces";
 
-export class SafeObserver<T> {
-  constructor(protected readonly observer: Observer<T>) {}
+export class SafeObserver<T> implements Observer<T> {
+  constructor(protected readonly observer: PartialObserver<T>) {}
 
   next(value: T) {
     if ("next" in this.observer && isFunction(this.observer.next)) {

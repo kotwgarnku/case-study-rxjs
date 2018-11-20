@@ -1,4 +1,4 @@
-import { Observer } from "core/interfaces";
+import { PartialObserver } from "core/interfaces";
 import { Subscriber } from "core/subscriber";
 import { Subscription } from "core/subscription";
 
@@ -13,7 +13,7 @@ export class ReplaySubject<T> extends Subject<T> {
     this.buffer = new Buffer<T>(bufferSize);
   }
 
-  subscribe(observer?: Observer<T>): Subscription {
+  subscribe(observer?: PartialObserver<T>): Subscription {
     if (observer) {
       const subscriber = new Subscriber(observer);
       this.subscribers = [...this.subscribers, subscriber];

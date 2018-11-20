@@ -1,14 +1,15 @@
 import { Observable } from "core/observables";
+import { Observer } from "core/interfaces";
 import { SafeObserver } from "core/safe-observer";
 import { isFunction } from "utils";
-import { createFakeObserver } from "utils/testing/fake-observer";
+import { createFakeObserver } from "utils/testing";
 
 import { first } from "./first";
 
 describe("Operator: first", function() {
   const baseObservable = new Observable(dataSource);
   let observableAfterOperator: Observable<number>;
-  let fakeObserver: SafeObserver<number>;
+  let fakeObserver: Observer<number>;
 
   beforeEach(function() {
     observableAfterOperator = baseObservable.pipe(first());

@@ -1,7 +1,7 @@
 import { Subscription } from "core/subscription";
 
-import { Observer } from "./observer";
+import { PartialObserver } from "./partial-observer";
 
 export interface Subscribable<T> {
-  subscribe(observer: Observer<T>): Subscription;
+  subscribe(observer: PartialObserver<T>): Subscription;
 }

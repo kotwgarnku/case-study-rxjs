@@ -8,6 +8,7 @@ import { SafeObserver } from "core/safe-observer";
 import { Subscription } from "core/subscription";
 import { Subscriber } from "core/subscriber";
 import { noop, isFunction } from "utils";
+import { PartialObserver } from "core/interfaces/partial-observer";
 
 export class Observable<T> implements Subscribable<T> {
   constructor(
@@ -16,7 +17,7 @@ export class Observable<T> implements Subscribable<T> {
     ) => TearDownLogic = noop
   ) {}
 
-  subscribe(observer?: Observer<T>): Subscription {
+  subscribe(observer?: PartialObserver<T>): Subscription {
     if (observer) {
       const subscriber = new Subscriber(observer);
       let tearDownLogic: TearDownLogic | undefined;
