@@ -1,4 +1,4 @@
-import { OperatorFunction, UnaryFunction, Observer } from "core/interfaces";
+import { OperatorFunction, UnaryFunction } from "core/interfaces";
 import { Observable } from "core/observables";
 import { SafeObserver } from "core/safe-observer";
 

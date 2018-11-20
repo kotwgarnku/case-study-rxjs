@@ -1,6 +1,5 @@
 import { Observable } from "core/observables";
 import { Observer } from "core/interfaces";
-import { SafeObserver } from "core/safe-observer";
 import { isFunction } from "utils";
 import { createFakeObserver } from "utils/testing";
 
@@ -36,7 +35,7 @@ describe("Operator: map", function() {
   });
 });
 
-function dataSource(observer: SafeObserver<number>) {
+function dataSource(observer: Observer<number>) {
   observer.next(1);
   observer.complete();
 }

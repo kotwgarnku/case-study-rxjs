@@ -1,6 +1,6 @@
+import { Observer } from "core/interfaces";
+
 import { Observable } from "../observable/observable";
-import { ReplaySubject } from "../replay-subject/replay-subject";
-import { SafeObserver } from "core/safe-observer";
 
 const emptyValue = Symbol.for("emptyValue");
 
@@ -13,7 +13,7 @@ export function combineLatest(
   );
 
   const stream = new Observable(
-    (observer: SafeObserver<Record<string, any>>) => {
+    (observer: Observer<Record<string, any>>) => {
       const subscriptions = Object.entries(observables).map(
         ([key, observable]) =>
           observable.subscribe({

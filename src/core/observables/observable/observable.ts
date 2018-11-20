@@ -1,10 +1,9 @@
 import {
-  Observer,
   OperatorFunction,
   Subscribable,
-  TearDownLogic
+  TearDownLogic,
+  Observer
 } from "core/interfaces";
-import { SafeObserver } from "core/safe-observer";
 import { Subscription } from "core/subscription";
 import { Subscriber } from "core/subscriber";
 import { noop, isFunction } from "utils";
@@ -12,9 +11,7 @@ import { PartialObserver } from "core/interfaces/partial-observer";
 
 export class Observable<T> implements Subscribable<T> {
   constructor(
-    private readonly dataSource: (
-      observer: SafeObserver<T>
-    ) => TearDownLogic = noop
+    private readonly dataSource: (observer: Observer<T>) => TearDownLogic = noop
   ) {}
 
   subscribe(observer?: PartialObserver<T>): Subscription {
