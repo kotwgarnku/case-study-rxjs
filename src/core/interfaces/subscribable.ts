@@ -1,4 +1,4 @@
-import { Subscription } from 'core/subscription'
+import { Subscription } from 'core/subscription/subscription'
 
 import { PartialObserver } from './partial-observer'
 

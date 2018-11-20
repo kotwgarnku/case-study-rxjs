@@ -1,5 +1,5 @@
-import { PartialObserver } from './interfaces'
-import { SafeObserver } from './safe-observer'
+import { PartialObserver } from '../interfaces'
+import { SafeObserver } from '../safe-observer/safe-observer'
 
 export class Subscriber<T> extends SafeObserver<T> {
   private isStopped: boolean

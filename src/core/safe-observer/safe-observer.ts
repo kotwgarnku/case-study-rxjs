@@ -1,6 +1,6 @@
 import { isFunction } from 'utils'
 
-import { Observer, PartialObserver } from './interfaces'
+import { Observer, PartialObserver } from '../interfaces'
 
 export class SafeObserver<T> implements Observer<T> {
   constructor(protected readonly observer: PartialObserver<T>) {}

@@ -1,7 +1,7 @@
 import { createFakeObserver } from 'utils/testing'
 
 import { SafeObserver } from './safe-observer'
-import { Observer } from './interfaces'
+import { Observer } from '../interfaces'
 
 describe('SafeObserver', function() {
   let observer: Observer<number>

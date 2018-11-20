@@ -1,6 +1,6 @@
 import { Subscribable, PartialObserver, Observer } from 'core/interfaces'
-import { Subscription } from 'core/subscription'
-import { Subscriber } from 'core/subscriber'
+import { Subscription } from 'core/subscription/subscription'
+import { Subscriber } from 'core/subscriber/subscriber'
 
 import { Observable } from '../observable/observable'
 

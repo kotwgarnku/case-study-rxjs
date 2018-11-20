@@ -4,8 +4,8 @@ import {
   TearDownLogic,
   Observer,
 } from 'core/interfaces'
-import { Subscription } from 'core/subscription'
-import { Subscriber } from 'core/subscriber'
+import { Subscription } from 'core/subscription/subscription'
+import { Subscriber } from 'core/subscriber/subscriber'
 import { noop, isFunction } from 'utils'
 import { PartialObserver } from 'core/interfaces/partial-observer'
 

@@ -1,6 +1,6 @@
 import { PartialObserver } from 'core/interfaces'
-import { Subscriber } from 'core/subscriber'
-import { Subscription } from 'core/subscription'
+import { Subscriber } from 'core/subscriber/subscriber'
+import { Subscription } from 'core/subscription/subscription'
 
 import { Subject } from '../subject/subject'
 import { Buffer } from './buffer'
