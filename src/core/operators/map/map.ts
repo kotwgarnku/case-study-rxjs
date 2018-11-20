@@ -6,20 +6,19 @@ export function map<T, R>(
   mapping: UnaryFunction<T, R>
 ): OperatorFunction<T, R> {
   return function innerMap(observable: Observable<T>): Observable<R> {
-    return new Observable<R>((observer: Observer<R>) => {
-      const safeObserver = new SafeObserver(observer);
-      const mappedSafeObserver: SafeObserver<T> = new SafeObserver({
+    return new Observable<R>(observer => {
+      const mappedObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
-          safeObserver.next(mapping(value));
+          observer.next(mapping(value));
         },
         error(err: Error) {
-          safeObserver.error(err);
+          observer.error(err);
         },
         complete() {
-          safeObserver.complete();
+          observer.complete();
         }
       });
-      const subscription = observable.subscribe(mappedSafeObserver);
+      const subscription = observable.subscribe(mappedObserver);
       return () => subscription.unsubscribe();
     });
   };

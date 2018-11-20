@@ -7,11 +7,11 @@ import { map } from "./map";
 
 describe("Operator: map", function() {
   const baseObservable = new Observable(dataSource);
-  let mappedObservable: Observable<number>;
+  let observableAfterOperator: Observable<number>;
   let fakeObserver: SafeObserver<number>;
 
   beforeEach(function() {
-    mappedObservable = baseObservable.pipe(map(x => 2 * x));
+    observableAfterOperator = baseObservable.pipe(map(x => 2 * x));
     fakeObserver = createFakeObserver();
   });
 
@@ -26,11 +26,11 @@ describe("Operator: map", function() {
   });
 
   it("should return new Observable", function() {
-    expect(mappedObservable).not.toBe(baseObservable);
+    expect(observableAfterOperator).not.toBe(baseObservable);
   });
 
   it("should use given function", function() {
-    mappedObservable.subscribe(fakeObserver);
+    observableAfterOperator.subscribe(fakeObserver);
     expect(fakeObserver.next).toHaveBeenCalledWith(2);
   });
 });
