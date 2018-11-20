@@ -1,14 +1,14 @@
 import { Observable } from 'core/observables';
 import { Observer } from 'core/interfaces';
 import { isFunction } from 'utils';
-import { createFakeObserver } from 'utils/testing';
+import { createFakeObserver, FakeObserver } from 'utils/testing';
 
 import { map } from './map';
 
 describe('Operator: map', function() {
   const baseObservable = new Observable(dataSource);
   let observableAfterOperator: Observable<number>;
-  let fakeObserver: Observer<number>;
+  let fakeObserver: FakeObserver<number>;
 
   beforeEach(function() {
     observableAfterOperator = baseObservable.pipe(map((x) => 2 * x));
