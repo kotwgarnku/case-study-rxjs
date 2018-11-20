@@ -1,10 +1,11 @@
-import { Subscribable, PartialObserver } from "core/interfaces";
+import { Subscribable, PartialObserver, Observer } from "core/interfaces";
 import { Subscription } from "core/subscription";
 import { Subscriber } from "core/subscriber";
 
 import { Observable } from "../observable/observable";
 
-export class Subject<T> extends Observable<T> implements Subscribable<T> {
+export class Subject<T> extends Observable<T>
+  implements Subscribable<T>, Observer<T> {
   protected subscribers: Subscriber<T>[];
 
   constructor() {
