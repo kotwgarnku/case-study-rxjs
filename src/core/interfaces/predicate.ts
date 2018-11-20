@@ -1,1 +1,3 @@
-export type Predicate<T> = (arg: T) => boolean;
+import { UnaryFunction } from "./unary-function";
+
+export type Predicate<T> = UnaryFunction<T, boolean>;

@@ -7,21 +7,15 @@ export function first<T>(
 ): OperatorFunction<T, T> {
   return function firstOperator(observable: Observable<T>): Observable<T> {
     return new Observable<T>((observer) => {
-      const firstObserver: SafeObserver<T> = new SafeObserver({
+      const operatorObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
           if (predicate(value)) {
             observer.next(value);
             observer.complete();
           }
         },
-        error(err: Error) {
-          observer.error(err);
-        },
-        complete() {
-          observer.complete();
-        },
       });
-      const subscription = observable.subscribe(firstObserver);
+      const subscription = observable.subscribe(operatorObserver);
       return () => subscription.unsubscribe();
     });
   };
