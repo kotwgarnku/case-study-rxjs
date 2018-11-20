@@ -1,5 +1,5 @@
 import { Observer } from "core/interfaces";
-import { SafeObserver } from "core/safe-observer";
+import { Subscriber } from "core/subscriber";
 import { Subscription } from "core/subscription";
 
 import { Subject } from "../subject/subject";
@@ -15,13 +15,14 @@ export class ReplaySubject<T> extends Subject<T> {
 
   subscribe(observer?: Observer<T>): Subscription {
     if (observer) {
-      const safeObserver = new SafeObserver(observer);
-      this.observers = [...this.observers, safeObserver];
+      const subscriber = new Subscriber(observer);
+      this.subscribers = [...this.subscribers, subscriber];
 
-      this.buffer.content().forEach(value => safeObserver.next(value));
+      this.buffer.content().forEach(value => subscriber.next(value));
 
       return new Subscription(() => {
-        this.observers = this.observers.filter(obs => obs !== observer);
+        subscriber.stop();
+        this.subscribers = this.subscribers.filter(subs => subs !== subscriber);
       });
     } else {
       return Subscription.empty();

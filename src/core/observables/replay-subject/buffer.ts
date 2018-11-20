@@ -2,7 +2,7 @@ export class Buffer<T> {
   private buffer: T[];
   private tail: number;
 
-  constructor(private bufferSize: number) {
+  constructor(private readonly bufferSize: number) {
     this.buffer = [];
     this.tail = 0;
   }

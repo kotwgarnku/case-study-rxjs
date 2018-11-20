@@ -1,24 +1,26 @@
 import { Subscribable, Observer } from "core/interfaces";
-import { Subscription } from "core/subscription";
 import { SafeObserver } from "core/safe-observer";
+import { Subscription } from "core/subscription";
+import { Subscriber } from "core/subscriber";
 
 import { Observable } from "../observable/observable";
 
 export class Subject<T> extends Observable<T> implements Subscribable<T> {
-  protected observers: SafeObserver<T>[];
+  protected subscribers: Subscriber<T>[];
 
   constructor() {
     super();
-    this.observers = [];
+    this.subscribers = [];
   }
 
   subscribe(observer?: Observer<T>): Subscription {
     if (observer) {
-      const safeObserver = new SafeObserver(observer);
-      this.observers = [...this.observers, safeObserver];
+      const subscriber = new Subscriber(observer);
+      this.subscribers = [...this.subscribers, subscriber];
 
       return new Subscription(() => {
-        this.observers = this.observers.filter(obs => obs !== observer);
+        subscriber.stop();
+        this.subscribers = this.subscribers.filter(subs => subs !== subscriber);
       });
     } else {
       return Subscription.empty();
@@ -26,20 +28,20 @@ export class Subject<T> extends Observable<T> implements Subscribable<T> {
   }
 
   next(value: T): void {
-    this.observers.forEach(observer => {
-      observer.next(value);
+    this.subscribers.forEach(subscriber => {
+      subscriber.next(value);
     });
   }
 
   error(error: Error): void {
-    this.observers.forEach(observer => {
-      observer.error(error);
+    this.subscribers.forEach(subscriber => {
+      subscriber.error(error);
     });
   }
 
   complete(): void {
-    this.observers.forEach(observer => {
-      observer.complete();
+    this.subscribers.forEach(subscriber => {
+      subscriber.complete();
     });
   }
 }

@@ -39,5 +39,5 @@ export function combineLatest(
 }
 
 function hasAllValues(obj: Record<string, any>): boolean {
-  return !Object.values(obj).some(value => value === emptyValue);
+  return Object.values(obj).every(value => value === emptyValue);
 }

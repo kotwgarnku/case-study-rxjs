@@ -6,7 +6,8 @@ import {
 } from "core/interfaces";
 import { SafeObserver } from "core/safe-observer";
 import { Subscription } from "core/subscription";
-import { noop } from "utils";
+import { Subscriber } from "core/subscriber";
+import { noop, isFunction } from "utils";
 
 export class Observable<T> implements Subscribable<T> {
   constructor(
@@ -17,7 +18,24 @@ export class Observable<T> implements Subscribable<T> {
 
   subscribe(observer?: Observer<T>): Subscription {
     if (observer) {
-      return new Subscription(this.dataSource(new SafeObserver(observer)));
+      const subscriber = new Subscriber(observer);
+      let tearDownLogic: TearDownLogic | undefined;
+
+      try {
+        tearDownLogic = this.dataSource(subscriber);
+      } catch (err) {
+        subscriber.error(err);
+        if (isFunction(tearDownLogic)) {
+          tearDownLogic();
+        }
+      }
+
+      return new Subscription(() => {
+        subscriber.stop();
+        if (isFunction(tearDownLogic)) {
+          tearDownLogic();
+        }
+      });
     } else {
       return Subscription.empty();
     }

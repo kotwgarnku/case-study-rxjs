@@ -42,197 +42,96 @@ describe("subscribe", () => {
     source.subscribe();
   });
 
-  // it("should not be unsubscribed when other empty subscription completes", () => {
-  //   let unsubscribeCalled = false;
-  //   const source = new Observable<number>(() => {
-  //     return () => {
-  //       unsubscribeCalled = true;
-  //     };
-  //   });
+  it("should ignore next messages after unsubscription", done => {
+    let times = 0;
 
-  //   source.subscribe();
+    const subscription = new Observable<number>(observer => {
+      let i = 0;
+      const id = setInterval(() => {
+        observer.next(i++);
+      }, 0);
 
-  //   expect(unsubscribeCalled).to.be.false;
+      return () => {
+        clearInterval(id);
+        expect(times).toEqual(2);
+        done();
+      };
+    }).subscribe({
+      next() {
+        times += 1;
+        if (times === 2) {
+          subscription.unsubscribe();
+        }
+      }
+    });
+  });
 
-  //   Observable.empty().subscribe();
+  it("should ignore error messages after unsubscription", done => {
+    let times = 0;
+    let errorCalled = false;
 
-  //   expect(unsubscribeCalled).to.be.false;
-  // });
+    const subscription = new Observable<number>(observer => {
+      let i = 0;
+      const id = setInterval(() => {
+        observer.next(i++);
+        if (i === 3) {
+          observer.error(new Error());
+        }
+      }, 0);
 
-  // it("should not be unsubscribed when other subscription with same observer completes", () => {
-  //   let unsubscribeCalled = false;
-  //   const source = new Observable<number>(() => {
-  //     return () => {
-  //       unsubscribeCalled = true;
-  //     };
-  //   });
+      return () => {
+        clearInterval(id);
+        expect(times).toEqual(2);
+        expect(errorCalled).toBe(false);
+        done();
+      };
+    })
+      .subscribe({
+        next() {
+          times += 1;
+          if (times === 2) {
+            subscription.unsubscribe();
+          }
+        },
+        error() {
+          errorCalled = true;
+        }
+      });
+  });
 
-  //   let observer = {
-  //     next: function() {
-  //       /*noop*/
-  //     }
-  //   };
+  it("should ignore complete messages after unsubscription", done => {
+    let times = 0;
+    let completeCalled = false;
 
-  //   source.subscribe(observer);
+    const subscription = new Observable<number>(observer => {
+      let i = 0;
+      const id = setInterval(() => {
+        observer.next(i++);
+        if (i === 3) {
+          observer.complete();
+        }
+      }, 0);
 
-  //   expect(unsubscribeCalled).to.be.false;
-
-  //   Observable.empty().subscribe(observer);
-
-  //   expect(unsubscribeCalled).to.be.false;
-  // });
-
-  // it("should run unsubscription logic when an error is sent asynchronously and subscribe is called with no arguments", done => {
-  //   const sandbox = sinon.sandbox.create();
-  //   const fakeTimer = sandbox.useFakeTimers();
-
-  //   let unsubscribeCalled = false;
-  //   const source = new Observable<number>(observer => {
-  //     const id = setInterval(() => {
-  //       observer.error(0);
-  //     }, 1);
-  //     return () => {
-  //       clearInterval(id);
-  //       unsubscribeCalled = true;
-  //     };
-  //   });
-
-  //   source.subscribe({
-  //     error(err) {
-  //       /* noop: expected error */
-  //     }
-  //   });
-
-  //   setTimeout(() => {
-  //     let err;
-  //     let errHappened = false;
-  //     try {
-  //       expect(unsubscribeCalled).to.be.true;
-  //     } catch (e) {
-  //       err = e;
-  //       errHappened = true;
-  //     } finally {
-  //       if (!errHappened) {
-  //         done();
-  //       } else {
-  //         done(err);
-  //       }
-  //     }
-  //   }, 100);
-
-  //   fakeTimer.tick(110);
-  //   sandbox.restore();
-  // });
-
-  // it("should return a Subscription that calls the unsubscribe function returned by the subscriber", () => {
-  //   let unsubscribeCalled = false;
-
-  //   const source = new Observable<number>(() => {
-  //     return () => {
-  //       unsubscribeCalled = true;
-  //     };
-  //   });
-
-  //   const sub = source.subscribe(() => {
-  //     //noop
-  //   });
-  //   expect(sub instanceof Rx.Subscription).to.be.true;
-  //   expect(unsubscribeCalled).to.be.false;
-  //   expect(sub.unsubscribe).to.be.a("function");
-
-  //   sub.unsubscribe();
-  //   expect(unsubscribeCalled).to.be.true;
-  // });
-
-  // it("should ignore next messages after unsubscription", done => {
-  //   let times = 0;
-
-  //   const subscription = new Observable<number>(observer => {
-  //     let i = 0;
-  //     const id = setInterval(() => {
-  //       observer.next(i++);
-  //     });
-
-  //     return () => {
-  //       clearInterval(id);
-  //       expect(times).to.equal(2);
-  //       done();
-  //     };
-  //   })
-  //     .do(() => (times += 1))
-  //     .subscribe(function() {
-  //       if (times === 2) {
-  //         subscription.unsubscribe();
-  //       }
-  //     });
-  // });
-
-  // it("should ignore error messages after unsubscription", done => {
-  //   let times = 0;
-  //   let errorCalled = false;
-
-  //   const subscription = new Observable<number>(observer => {
-  //     let i = 0;
-  //     const id = setInterval(() => {
-  //       observer.next(i++);
-  //       if (i === 3) {
-  //         observer.error(new Error());
-  //       }
-  //     });
-
-  //     return () => {
-  //       clearInterval(id);
-  //       expect(times).to.equal(2);
-  //       expect(errorCalled).to.be.false;
-  //       done();
-  //     };
-  //   })
-  //     .do(() => (times += 1))
-  //     .subscribe(
-  //       function() {
-  //         if (times === 2) {
-  //           subscription.unsubscribe();
-  //         }
-  //       },
-  //       function() {
-  //         errorCalled = true;
-  //       }
-  //     );
-  // });
-
-  // it("should ignore complete messages after unsubscription", done => {
-  //   let times = 0;
-  //   let completeCalled = false;
-
-  //   const subscription = new Observable<number>(observer => {
-  //     let i = 0;
-  //     const id = setInterval(() => {
-  //       observer.next(i++);
-  //       if (i === 3) {
-  //         observer.complete();
-  //       }
-  //     });
-
-  //     return () => {
-  //       clearInterval(id);
-  //       expect(times).to.equal(2);
-  //       expect(completeCalled).to.be.false;
-  //       done();
-  //     };
-  //   })
-  //     .do(() => (times += 1))
-  //     .subscribe(
-  //       function() {
-  //         if (times === 2) {
-  //           subscription.unsubscribe();
-  //         }
-  //       },
-  //       null,
-  //       function() {
-  //         completeCalled = true;
-  //       }
-  //     );
-  // });
+      return () => {
+        clearInterval(id);
+        expect(times).toEqual(2);
+        expect(completeCalled).toBe(false);
+        done();
+      };
+    })
+      .subscribe({
+        next() {
+          times += 1
+          if (times === 2) {
+            subscription.unsubscribe();
+          }
+        },
+        error: null,
+        complete() {
+          completeCalled = true;
+        }
+      });
+  });
 
   // describe("when called with an anonymous observer", () => {
   //   it(

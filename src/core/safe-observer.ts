@@ -2,7 +2,7 @@ import { Observer } from "./interfaces";
 import { isFunction } from "utils";
 
 export class SafeObserver<T> {
-  constructor(private readonly observer: Observer<T>) {}
+  constructor(protected readonly observer: Observer<T>) {}
 
   next(value: T) {
     if ("next" in this.observer && isFunction(this.observer.next)) {
