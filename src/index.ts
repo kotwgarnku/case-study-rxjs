@@ -1,17 +1,22 @@
 import { Observable } from 'core/observables';
-import { first, map } from 'core/operators';
+import { map, tap } from 'core/operators';
 
-new Observable(function dataSource(observer) {
-  observer.next(1);
-  observer.next(2);
-  observer.complete();
+const subscription = new Observable<number>(function dataSource(observer) {
+  let times = 0;
+  const interval = setInterval(() => {
+    observer.next(times+=1);
+  }, 100);
+  return () => clearInterval(interval);
 })
   .pipe(
-    first(),
-    map((x) => `Hello ${x}`)
+    map((x) => 2 * x),
+    map((x) => 3 * x),
+    tap(console.log)
   )
   .subscribe({
     next(value) {
-      console.log(value);
+      if (value === 60) {
+        subscription.unsubscribe();
+      }
     },
   });

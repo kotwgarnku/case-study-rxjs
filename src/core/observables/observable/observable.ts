@@ -3,11 +3,11 @@ import {
   Subscribable,
   TearDownLogic,
   Observer,
+  PartialObserver,
 } from 'core/interfaces';
 import { Subscription } from 'core/subscription/subscription';
 import { Subscriber } from 'core/subscriber/subscriber';
 import { noop, isFunction } from 'utils';
-import { PartialObserver } from 'core/interfaces/partial-observer';
 
 export class Observable<T> implements Subscribable<T> {
   constructor(
