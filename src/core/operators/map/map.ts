@@ -9,7 +9,11 @@ export function map<T, R>(
     return new Observable<R>((observer) => {
       const operatorObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
-          observer.next(mapping(value));
+          try {
+            observer.next(mapping(value));
+          } catch (e) {
+            observer.error(e);
+          }
         },
       });
       const subscription = observable.subscribe(operatorObserver);

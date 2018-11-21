@@ -9,9 +9,13 @@ export function first<T>(
     return new Observable<T>((observer) => {
       const operatorObserver: SafeObserver<T> = new SafeObserver({
         next(value: T) {
-          if (predicate(value)) {
-            observer.next(value);
-            observer.complete();
+          try {
+            if (predicate(value)) {
+              observer.next(value);
+              observer.complete();
+            }
+          } catch (e) {
+            observer.error(e);
           }
         },
       });
